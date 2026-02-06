@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-     "start": "node index.js"
+    "build": "prisma generate",
+    "start": "prisma migrate deploy && node index.js"
   },
   "keywords": [],
   "author": "",

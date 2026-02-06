@@ -9,29 +9,37 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// GET all tasks
 app.get("/tasks", async (req, res) => {
-  const tasks = await prisma.task.findMany({
-    orderBy: { createdAt: "desc" }
-  });
-  res.json(tasks);
+  try {
+    const tasks = await prisma.task.findMany({
+      orderBy: { createdAt: "desc" }
+    });
+    res.json(tasks);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch tasks" });
+  }
 });
 
-// ADD a task
 app.post("/tasks", async (req, res) => {
-  const { task } = req.body;
+  try {
+    const { title } = req.body;
 
-  if (!task) {
-    return res.status(400).json({ error: "Task is required" });
+    if (!title) {
+      return res.status(400).json({ error: "Title is required" });
+    }
+
+    const newTask = await prisma.task.create({
+      data: { title }
+    });
+
+    res.status(201).json(newTask);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to add task" });
   }
-
-  const newTask = await prisma.task.create({
-    data: { title: task }
-  });
-
-  res.status(201).json(newTask);
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
