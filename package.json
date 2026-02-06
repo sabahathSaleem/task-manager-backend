@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "prisma generate",
-    "start": "prisma migrate deploy && node index.js"
+    "start": "node migrate-and-start.js"
   },
   "keywords": [],
   "author": "",
